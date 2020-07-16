@@ -1,0 +1,18 @@
+{
+    "name": "com.alexism.floorplan.editor",
+    "references": [
+        "com.alexism.floorplacom.alexism.floorplan",
+        "Unity.TextMeshPro"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
