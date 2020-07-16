@@ -24,19 +24,19 @@ namespace alexism.Floorplan.Core.Components
             offset = r.bounds.center - new Vector3(0, r.bounds.size.y / 2.4f);
             stuff = new List<GameObject>();
 #if UNITY_EDITOR
-            //if (Physics.CheckSphere(offset, .1f))
-            //{
+            if (Physics.CheckSphere(offset, .1f) && tileType==TileTypes.Floor)
+            {
 
-            //    Collider[] overlaps = Physics.OverlapSphere(offset, .1f);
-            //    foreach (Collider overlap in overlaps)
-            //    {
-            //        if (overlap.transform.root == transform.root && !isChild(overlap.transform,transform))
-            //        {
-            //            print("Destroyed overlap: "+overlap.transform.name);
-            //            DestroyImmediate(overlap.transform.parent.gameObject);
-            //        }
-            //    }
-            //}
+                Collider[] overlaps = Physics.OverlapSphere(offset, .1f);
+                foreach (Collider overlap in overlaps)
+                {
+                    if (overlap.transform.root == transform.root && !isChild(overlap.transform, transform))
+                    {
+                        print("Destroyed overlap: " + overlap.transform.name);
+                        DestroyImmediate(overlap.transform.parent.gameObject);
+                    }
+                }
+            }
 #endif
         }
 
