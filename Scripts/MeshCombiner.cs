@@ -7,23 +7,21 @@ public class MeshCombiner : MonoBehaviour
     public void Awake()
     {
         Combine();
-        Simplify();
     }
 
     private void Simplify()
     {
-        MeshCollider col = GetComponent<MeshCollider>();
-        Mesh newMesh = CopyMesh();
-        print("Before: "+newMesh.triangles.Length);
-        newMesh.Weld(.1f,1f);
-        col.sharedMesh = newMesh;
-        col.Simplify();
-        print("After: " + newMesh.triangles.Length);
+        //MeshCollider col = GetComponent<MeshCollider>();
+        //Mesh newMesh = CopyMesh(col.sharedMesh);
+        //print("Before: "+newMesh.triangles.Length); 
+        //newMesh.Simplify();
+        //col.sharedMesh = newMesh;
+        //print("After: " + newMesh.triangles.Length); //Same amount of triangles as before
     }
 
-    Mesh CopyMesh()
+    Mesh CopyMesh(Mesh m)
     {
-        Mesh mesh = GetComponent<MeshFilter>().mesh;
+        Mesh mesh = m;
         Mesh newmesh = new Mesh();
         newmesh.vertices = mesh.vertices;
         newmesh.triangles = mesh.triangles;
@@ -59,19 +57,21 @@ public class MeshCombiner : MonoBehaviour
 
             for (int s = 0; s < meshFilter.sharedMesh.subMeshCount; s++)
             {
-                int materialArrayIndex = Contains(materials, meshRenderer.sharedMaterials[s].name);
-                if (materialArrayIndex == -1)
-                {
-                    materials.Add(meshRenderer.sharedMaterials[s]);
-                    materialArrayIndex = materials.Count - 1;
-                }
-                combineInstanceArrays.Add(new ArrayList());
+                if (meshRenderer.sharedMaterials[s]){
+                    int materialArrayIndex = Contains(materials, meshRenderer.sharedMaterials[s].name);
+                    if (materialArrayIndex == -1)
+                    {
+                        materials.Add(meshRenderer.sharedMaterials[s]);
+                        materialArrayIndex = materials.Count - 1;
+                    }
+                    combineInstanceArrays.Add(new ArrayList());
 
-                CombineInstance combineInstance = new CombineInstance();
-                combineInstance.transform = meshRenderer.transform.localToWorldMatrix;
-                combineInstance.subMeshIndex = s;
-                combineInstance.mesh = meshFilter.sharedMesh;
-                (combineInstanceArrays[materialArrayIndex] as ArrayList).Add(combineInstance);
+                    CombineInstance combineInstance = new CombineInstance();
+                    combineInstance.transform = meshRenderer.transform.localToWorldMatrix;
+                    combineInstance.subMeshIndex = s;
+                    combineInstance.mesh = meshFilter.sharedMesh;
+                    (combineInstanceArrays[materialArrayIndex] as ArrayList).Add(combineInstance);
+                }
             }
         }
 

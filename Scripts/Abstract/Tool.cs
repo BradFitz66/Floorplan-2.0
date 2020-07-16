@@ -145,6 +145,7 @@ public class RectangleStrat : alexism.Floorplan.Core.Abstract.Tool
                 wall = script.createInstance(tile, (topLeft - new Vector3(0, 0, z)), Quaternion.LookRotation(-Vector3.forward, Vector3.up));
                 wall.GetComponent<Renderer>().materials = mats;
                 wall.transform.parent.parent = gO.transform;
+
             }
 
             if (!Physics.CheckSphere(offset2, .1f))
