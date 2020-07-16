@@ -4,7 +4,7 @@
 
 This is an extensiive modification to Alexis Morin's floorplan unity plugin. So much so that I believe the code base to be atleast 90% changed if not 100%.
 
-Bewarned, however, a lot of this code was written by a complete idiot and while I'm developing a game so a lot of features may be based around said game and may not be fit for general purpose.
+Bewarned, however, a lot of this code was written by a complete idiot (me) and while I'm developing a game so a lot of features may be based around said game and may not be fit for general purpose.
 
 
 What are the changes I've made, you say? Well:
