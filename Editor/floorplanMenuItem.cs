@@ -12,7 +12,6 @@ namespace alexism.Floorplan.Core.editor
         [MenuItem("Tools/Add Floorplan Handle")]
         static void addFloorplanHandle()
         {
-            GameObject floorplanGeometryGameObject = new GameObject("New Floorplan Geometry");
             GameObject floorplanHandleGameObject = new GameObject("New Floorplan Handle");
             floorplanHandleGameObject.AddComponent<floorplan>();
         }

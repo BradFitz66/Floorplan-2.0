@@ -7,19 +7,25 @@ using alexism.Floorplan.Core.Components;
 using alexism.Floorplan.Core.Enums;
 using System.Linq;
 
+
 namespace alexism.Floorplan.Core
 {
+    [RequireComponent(typeof(Grid))]
     [ExecuteInEditMode]
+    
     public class floorplan : MonoBehaviour
     {
 
+        
         public Bounds bounds;
+        [HideInInspector]
         public GameObject geometry;
 
         private void Awake()
         {
-            geometry = GameObject.Find("New Floorplan Geometry");
-            RecalculateBounds();
+            if (!geometry)
+                geometry = new GameObject("FloorPlanGeometry");
+            //geometry = GameObject.Find("New Floorplan Geometry");
         }
 
         bool toolActive;
@@ -55,31 +61,12 @@ namespace alexism.Floorplan.Core
             return null;
         }
 
-        
-
-        [ContextMenu("Recalculate Bounds")]
-        public void RecalculateBounds()
+        private void OnDrawGizmosSelected()
         {
-            MeshFilter this_mf = GetComponent<MeshFilter>();
-            if (this_mf == null)
-            {
-                bounds = new Bounds(transform.position, Vector3.zero);
-            }
-            else
-            {
-                bounds = this_mf.sharedMesh.bounds;
-            }
 
-            MeshFilter[] mfs = geometry.GetComponentsInChildren<MeshFilter>();
-
-            foreach (MeshFilter mf in mfs)
-            {
-                Vector3 pos = mf.transform.position;
-                Bounds child_bounds = mf.sharedMesh.bounds;
-                child_bounds.center += pos;
-                bounds.Encapsulate(child_bounds);
-            }
         }
+
+        
 
         public TileTypes getTypeFromTile(GameObject tile)
         {
@@ -103,7 +90,7 @@ namespace alexism.Floorplan.Core
         void Start()
         {
             snapLastHandlePosition = transform.position;
-            geometryRoot = GameObject.Find("New Floorplan Geometry");
+            geometryRoot = geometry;
         }
 
         void Update()
@@ -119,7 +106,7 @@ namespace alexism.Floorplan.Core
             GameObject instance = PrefabUtility.InstantiatePrefab(instanceType) as GameObject;
             instance.transform.position = spawnPosition;
             instance.transform.rotation = spawnRotation;
-            instance.transform.parent = geometryRoot.transform;
+            instance.transform.parent = geometry.transform;
             instance.GetComponent<floorplanComponent>().tileset = tileset;
             instance.name = instanceType.name;
             return instance.transform.GetChild(0).gameObject;

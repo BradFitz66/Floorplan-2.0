@@ -45,8 +45,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tileset: {fileID: 0}
---- !u!65 &9102057507314132141
-BoxCollider:
+  stuff: []
+  tileType: 0
+--- !u!64 &7524738680035285364
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -55,9 +57,10 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 2, y: 0.125, z: 2}
-  m_Center: {x: -1, y: -0.0625, z: 1}
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4600343541166747875, guid: 898bd436bf2d0414982cf1e12cb7c64d, type: 3}
 --- !u!1001 &4107863720707354642
 PrefabInstance:
   m_ObjectHideFlags: 0

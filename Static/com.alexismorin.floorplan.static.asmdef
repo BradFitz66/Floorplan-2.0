@@ -1,3 +1,13 @@
-﻿{
-	"name": "com.alexismorin.floorplan.static"
+{
+    "name": "com.alexismorin.floorplan.static",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

@@ -2,7 +2,9 @@
     "name": "com.alexism.floorplan.editor",
     "references": [
         "com.alexism.floorplacom.alexism.floorplan",
-        "Unity.TextMeshPro"
+        "com.unity.2d.tilemap",
+        "Unity.TextMeshPro",
+        "com.alexismorin.floorplan.static"
     ],
     "includePlatforms": [
         "Editor"

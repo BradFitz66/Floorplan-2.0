@@ -4,7 +4,7 @@ using UnityEngine;
 using alexism.Floorplan.Core.Enums;
 using TMPro;
 using System.Linq;
-
+using alexism.Floorplan.Core.Static;
 namespace alexism.Floorplan.Core.editor
 {
     [CustomEditor(typeof(floorplan))]
@@ -29,20 +29,14 @@ namespace alexism.Floorplan.Core.editor
         Material[] materials;
 
         GameObject[] selecting;
-        GUIContent[] tilePreviews;
 
-        GUIContent[] drawObjectTextures;
 
-        GameObject widthText;
-        GameObject depthText;
         Renderer currentObjectRenderer;
 
         GUIStyle TitleLabels;
 
         Vector2 scrollPos;
         Vector2 scrollPos2;
-
-        List<GameObject> placingBuffer;
 
 
         void print(object print)
@@ -51,11 +45,13 @@ namespace alexism.Floorplan.Core.editor
         }
         private void Awake()
         {
+            script = (floorplan)target;
             materials = new Material[0];
         }
 
         public void OnDisable()
         {
+            
             if (SceneView.lastActiveSceneView)
             {
                 SceneView.lastActiveSceneView.isRotationLocked = false;
@@ -224,18 +220,16 @@ namespace alexism.Floorplan.Core.editor
             }
         }
 
-
-
         void OnSceneGUI()
         {
             floorplan script = (floorplan)target;
-            if(mouseEnd!=Vector3.zero && mouseStart != Vector3.zero)
+            if (mouseEnd!=Vector3.zero && mouseStart != Vector3.zero)
             {
                 currentTool.RenderPreview();
             }
             HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Keyboard));
             Event e = Event.current;
-
+            
             switch (e.type)
             {
                 case EventType.KeyDown:

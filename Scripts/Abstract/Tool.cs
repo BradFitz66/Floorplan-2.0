@@ -7,6 +7,7 @@ using alexism.Floorplan.Core.Enums;
 using alexism.Floorplan.Core;
 using alexism.Floorplan.Core.Abstract;
 using System.Runtime.InteropServices;
+using UnityEditor.Experimental.GraphView;
 
 //Implement strategy pattern for drawing tools 
 
@@ -33,7 +34,7 @@ public class RectangleFilledStrat : alexism.Floorplan.Core.Abstract.Tool
     public void Render(GameObject tile, floorplan script, Material[] mats)
     {
         GameObject gO = new GameObject("Floor");
-        gO.transform.parent = GameObject.Find("New Floorplan Geometry").transform;
+        gO.transform.parent = script.geometry.transform;
         Vector3 topLeft = new Vector3(Mathf.Max(mouseStart.x, mouseEnd.x), mouseStart.y, Mathf.Max(mouseStart.z, mouseEnd.z));
         for (int y = 0; y < Mathf.Abs(height); y += (int)script.tileSize)
         {
@@ -110,8 +111,9 @@ public class RectangleStrat : alexism.Floorplan.Core.Abstract.Tool
     bool replace;
     void Render(floorplan script, GameObject tile,Material[] mats)
     {
+        GameObject pillar = script.getTilesFromType(TileTypes.Pillar)[0];
         GameObject gO = new GameObject("Walls");
-        gO.transform.parent = GameObject.Find("New Floorplan Geometry").transform;
+        gO.transform.parent = script.geometry.transform;
         Vector3 topLeft = new Vector3(Mathf.Max(mouseStart.x, mouseEnd.x), mouseStart.y, Mathf.Max(mouseStart.z, mouseEnd.z));
         Vector3 bottomLeft = new Vector3(Mathf.Min(mouseStart.x, mouseEnd.x), mouseStart.y, Mathf.Min(mouseStart.z, mouseEnd.z));
 
@@ -133,7 +135,6 @@ public class RectangleStrat : alexism.Floorplan.Core.Abstract.Tool
                 wall.GetComponent<Renderer>().materials = mats;
                 wall.transform.parent.parent = gO.transform;
             }
-
         }
         for (int z = 0; z < Mathf.Abs(height); z += (int)script.tileSize)
         {
@@ -155,6 +156,22 @@ public class RectangleStrat : alexism.Floorplan.Core.Abstract.Tool
                 wall.transform.parent.parent = gO.transform;
             }
         }
+        //Create pillars. God all of the code in this place is awful. I'm sorry.
+        GameObject pillarTopLeft = script.createInstance(pillar, bottomLeft, Quaternion.identity);
+        GameObject pillarBottomLeft = script.createInstance(pillar, topLeft, Quaternion.identity);
+        GameObject pillarTopRight = script.createInstance(pillar, topLeft + new Vector3(width, 0, 0), Quaternion.identity);
+        GameObject pillarBottomRight = script.createInstance(pillar, bottomLeft + new Vector3(-width, 0, 0), Quaternion.identity);
+        pillarTopLeft.GetComponent<Renderer>().materials = mats;
+        pillarBottomLeft.GetComponent<Renderer>().materials = mats;
+        pillarTopRight.GetComponent<Renderer>().materials = mats;
+        pillarBottomRight.GetComponent<Renderer>().materials = mats;
+
+
+        pillarTopLeft.transform.parent.parent = gO.transform;
+        pillarBottomLeft.transform.parent.parent = gO.transform;
+        pillarTopRight.transform.parent.parent = gO.transform;
+        pillarBottomRight.transform.parent.parent = gO.transform;
+
         Undo.RegisterCreatedObjectUndo(gO, "Undo wall creation");
     }
 
@@ -227,9 +244,6 @@ public class RectangleStrat : alexism.Floorplan.Core.Abstract.Tool
                 break;
             case TileTypes.Floor:
                 Debug.LogWarning("Trying to draw type Floor with incorrect tool");
-                break;
-            case TileTypes.Pillar:
-                Debug.LogWarning("Pillar is not supported by this tool yet");
                 break;
         }
         Editor.DestroyImmediate(depthText);

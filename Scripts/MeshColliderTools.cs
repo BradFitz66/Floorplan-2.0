@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+
 using UnityEngine;
 using UnityEditor;
+using System.Linq;
 
-public static class MeshColliderTools
+static public class MeshColliderTools
 {
 
     public static void SnapToGrid(this Mesh mesh, float gridDelta)
@@ -27,6 +29,8 @@ public static class MeshColliderTools
         Vector3[] oldVertices = mesh.vertices;
         Vector3[] newVertices = new Vector3[oldVertices.Length];
         int[] old2new = new int[oldVertices.Length];
+        Vector2[] oldUVs = mesh.uv;
+        
         int newSize = 0;
 
         // Find AABB
@@ -65,7 +69,7 @@ public static class MeshColliderTools
             for (int j = 0; j < buckets[x, y, z].Count; j++)
             {
                 Vector3 to = newVertices[buckets[x, y, z][j]] - oldVertices[i];
-                if (Vector3.SqrMagnitude(to) < threshold)
+                if (Vector3.SqrMagnitude(to) < 0.001f)
                 {
                     old2new[i] = buckets[x, y, z][j];
                     goto skip; // Skip to next old vertex if this one is already there
@@ -96,7 +100,14 @@ public static class MeshColliderTools
         mesh.Clear();
         mesh.vertices = finalVertices;
         mesh.triangles = newTris;
-
+        Vector2[] newUVs = new Vector2[mesh.vertices.Length];
+        for(int i=0; i<newUVs.Length; i++)
+        {
+            newUVs[i] = oldUVs[i];
+        }
+        mesh.SetUVs(0, newUVs);
+        mesh.RecalculateNormals();
+        mesh.RecalculateTangents();
         // Debug.LogFormat("Weld vert count: {0} vs. {1}", newSize, oldVertices.Length);
     }
 
@@ -105,7 +116,9 @@ public static class MeshColliderTools
     public static void Simplify(this Mesh mesh)
     {
         var verts = mesh.vertices;
+        var uvs = mesh.uv;
         var origNumVerts = verts.Length;
+        var origNormals = mesh.normals;
 
         var workingSet = new List<Vertice>(origNumVerts);
         for (int i = 0; i < origNumVerts; i++)
@@ -199,11 +212,12 @@ public static class MeshColliderTools
         mesh.Clear();
         mesh.vertices = newPositions;
         mesh.triangles = resultTris.ToArray();
-
+        Array.Clear(mesh.uv, 0, mesh.uv.Length);
         mesh.RecalculateBounds();
         mesh.Optimize();
+        mesh.RecalculateNormals();
 
-        // Debug.LogFormat("Simplify vert count: {0} vs. {1}", simplifiedNumVerts, origNumVerts);
+        Debug.LogFormat("Simplify vert count: {0} vs. {1}", simplifiedNumVerts, origNumVerts);
     }
 
     private class Vertice
@@ -401,7 +415,7 @@ public static class MeshColliderTools
             var v0 = vertices[0].position;
             var v1 = vertices[1].position;
             float cross = Vector3.Cross(v1 - v0, nv.Value).sqrMagnitude;
-            return -5e-1f < cross && cross < 5e-1f;
+            return -5e-6f < cross && cross < 5e-6f;
         }
 
         public void DisconnectIncludingFaces()
