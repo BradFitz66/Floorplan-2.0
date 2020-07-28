@@ -22,9 +22,9 @@ public class MeshCombiner : MonoBehaviour
         {
             Transform child = transform.GetChild(i);
             if (child.name == "Floor")
-                child.SetParent(floorMesh.transform, false);
+                child.SetParent(floorMesh.transform, true);
             else if (child.name == "Walls")
-                child.SetParent(wallMesh.transform, false);
+                child.SetParent(wallMesh.transform, true);
         }
         wallMesh.transform.parent = transform;
         floorMesh.transform.parent = transform;
@@ -32,7 +32,7 @@ public class MeshCombiner : MonoBehaviour
         CombineWalls();
         CombineFloor();
         ClearChildren(floorMesh.transform);
-        //ClearChildren(wallMesh.transform);
+        ClearChildren(wallMesh.transform);
         SplitMesh(floorMesh.GetComponent<MeshFilter>());
         SplitMesh(wallMesh.GetComponent<MeshFilter>());
 
@@ -103,6 +103,7 @@ public class MeshCombiner : MonoBehaviour
                 !meshFilter.sharedMesh ||
                 meshRenderer.sharedMaterials.Length != meshFilter.sharedMesh.subMeshCount)
             {
+                print(meshFilter.gameObject.name);
                 continue;
             }
 
@@ -152,6 +153,7 @@ public class MeshCombiner : MonoBehaviour
             combineInstances[m] = new CombineInstance();
             combineInstances[m].mesh = meshes[m];
             combineInstances[m].subMeshIndex = 0;
+            
         }
 
         // Combine into one
@@ -174,11 +176,12 @@ public class MeshCombiner : MonoBehaviour
 
             if (!meshFilter || meshFilter.transform.GetComponent<Rigidbody>() || meshFilter.transform.GetComponentInParent<Rigidbody>() || meshFilter.transform.GetComponentInChildren<Rigidbody>())
                 continue;
+            print(meshFilter.gameObject.transform.parent.name);
             DestroyImmediate(meshFilter.gameObject.transform.parent.gameObject);
         }
         wallMesh.transform.position = basePosition;
         wallMesh.transform.rotation = baseRotation;
-        wallMesh.AddComponent<MeshCollider>().sharedMesh = floorMesh.GetComponent<MeshFilter>().sharedMesh;
+        wallMesh.AddComponent<MeshCollider>().sharedMesh = wallMesh.GetComponent<MeshFilter>().sharedMesh;
     }
     private void CombineFloor()
     {
