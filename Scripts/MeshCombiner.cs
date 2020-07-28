@@ -10,15 +10,20 @@ public class MeshCombiner : MonoBehaviour
     GameObject floorMesh;
     public void Awake()
     {
-        wallMesh = new GameObject("WallMesh",typeof(MeshFilter),typeof(Renderer));
+        
+    }
+
+    private void Start()
+    {
+        wallMesh = new GameObject("WallMesh", typeof(MeshFilter), typeof(Renderer));
         floorMesh = new GameObject("FloorMesh", typeof(MeshFilter), typeof(Renderer));
         print(transform.childCount);
         for (int i = transform.childCount - 1; i >= 0; --i)
         {
             Transform child = transform.GetChild(i);
-            if(child.name=="Floor")
+            if (child.name == "Floor")
                 child.SetParent(floorMesh.transform, false);
-            else if(child.name=="Walls")
+            else if (child.name == "Walls")
                 child.SetParent(wallMesh.transform, false);
         }
         wallMesh.transform.parent = transform;
@@ -53,7 +58,7 @@ public class MeshCombiner : MonoBehaviour
     {
         if (mf != null)
         {
-            mf.mesh.Weld(.01f, 1f);
+            mf.mesh.Weld(0.00000328f, 1f);
             mf.mesh.Simplify();
         }
     }

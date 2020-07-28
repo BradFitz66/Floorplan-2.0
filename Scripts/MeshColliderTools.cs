@@ -213,9 +213,22 @@ static public class MeshColliderTools
         mesh.vertices = newPositions;
         mesh.triangles = resultTris.ToArray();
         Array.Clear(mesh.uv, 0, mesh.uv.Length);
+
+        Vector3[] oldVerts = mesh.vertices;
+        int[] triangles = mesh.triangles;
+        Vector3[] vertices = new Vector3[triangles.Length];
+        for (int i = 0; i < triangles.Length; i++)
+        {
+            vertices[i] = oldVerts[triangles[i]];
+            triangles[i] = i;
+        }
+
+
+        mesh.vertices = vertices;
+        mesh.triangles = triangles;
         mesh.RecalculateBounds();
-        mesh.Optimize();
         mesh.RecalculateNormals();
+        mesh.Optimize();
 
         Debug.LogFormat("Simplify vert count: {0} vs. {1}", simplifiedNumVerts, origNumVerts);
     }
