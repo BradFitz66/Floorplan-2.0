@@ -1,3 +1,6 @@
+# BEING REWORKED
+Due to how awful my code is in this and how much of this code is tailored towards how I'm developing my game rather than fitting a general purpose role, I've decided I'm going to recreate completely it under a new name. This won't get any new updates and I'll update this once the new tool is ready.
+
 # Floorplan
  Based off of the Unity asset by Alexis Morin.
 
